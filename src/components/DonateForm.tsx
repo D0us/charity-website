@@ -8,8 +8,8 @@ import { trpc } from "../utils/trpc";
 interface DonateFormProps {}
 
 export const DonateForm = ({}: DonateFormProps) => {
-  const [amount, setAmount] = useState<string>();
-  const [result, setResult] = useState<string | null>(null);
+  const [amount, setAmount] = useState<string>("");
+  const [result, setResult] = useState<string>("");
 
   const { mutate } = trpc.donation.addDonation.useMutation();
 
@@ -38,8 +38,13 @@ export const DonateForm = ({}: DonateFormProps) => {
           console.log(receipt);
           if (receipt?.events![0]?.event === "DonationMade") {
             mutate({
-              amount: ethers.utils.parseEther(amount!).toBigInt(),
+              /* Todo:
+              1. get actual address
+              2. get cause dynamically
+              */
+              amount: ethers.utils.parseEther(amount!).toString(),
               address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+              causeId: "clacqgl200000wgfm7auw50p9",
             });
             setResult(`Donation successful!`);
           }

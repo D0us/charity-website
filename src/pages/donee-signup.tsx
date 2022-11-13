@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { CreateDoneeValues, createDoneeSchema } from "../schema/donee.schema";
 import { trpc } from "../utils/trpc";
+import { Dropdown } from "web3uikit";
 
 /**
  * @dev Users can sign up to be a donee
@@ -19,7 +20,10 @@ export const Signup = () => {
 
   const { mutate, error } = trpc.donee.addDonee.useMutation({
     onSuccess: () => {
-      console.log("Successfully added user");
+      console.log("Successfully added donee");
+    },
+    onError: (error) => {
+      console.log(`Error adding donee: ${error}`);
     },
   });
 
@@ -31,6 +35,11 @@ export const Signup = () => {
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-2xl">Sign up to be a donee </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xs">
+          <input
+            type="hidden"
+            {...register("causeId")}
+            value="clacqgl200000wgfm7auw50p9"
+          />
           <input
             {...register("name")}
             type="text"

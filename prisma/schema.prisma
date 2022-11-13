@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
   // Further reading:
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -27,12 +27,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? // @db.Text
-  access_token      String? // @db.Text
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? // @db.Text
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -71,6 +71,8 @@ model Donee {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Wallet    Wallet[]
+  causeId   String
+  Cause     Cause    @relation(fields: [causeId], references: [id])
 }
 
 model Wallet {
@@ -82,10 +84,21 @@ model Wallet {
   Donee     Donee?   @relation(fields: [doneeId], references: [id])
 }
 
-// Todo: stpre amount as bigint in postgres
+// Todo: store amount as bigint in postgres?
 model Donation {
   id        String   @id @default(cuid())
   address   String
-  amount    BigInt
+  amount    String
   createdAt DateTime @default(now())
+  causeId   String
+  Cause     Cause    @relation(fields: [causeId], references: [id])
+}
+
+model Cause {
+  id        String     @id @default(cuid())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Donation  Donation[]
+  Donee     Donee[]
 }

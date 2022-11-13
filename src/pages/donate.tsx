@@ -3,6 +3,7 @@ import { useMoralis } from "react-moralis";
 import Header from "../components/Header";
 import { DonateForm } from "../components/DonateForm";
 import { CauseDetails } from "../components/CauseDetails";
+import { RecentDonations } from "../components/RecentDonations";
 
 interface Cause {
   name: string;
@@ -23,7 +24,6 @@ export const Donate = () => {
   return (
     <>
       <Header />
-      <h1>Donate</h1>
       <div>
         {causes.map((cause, i) => {
           return <CauseCard key={i} cause={cause} />;
@@ -45,6 +45,7 @@ const CauseCard = ({ cause }: CauseCardProps) => {
       <h1>{cause.description}</h1>
       <DonateForm />
       <CauseDetails />
+      <RecentDonations />
     </div>
   );
 };

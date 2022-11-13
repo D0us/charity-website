@@ -6,6 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useMoralis } from "react-moralis";
 
 import { trpc } from "../utils/trpc";
+import { RecentDonations } from "../components/RecentDonations";
 
 const Home: NextPage = () => {
   const { isWeb3Enabled } = useMoralis();
@@ -51,6 +52,11 @@ const Home: NextPage = () => {
           </section>
 
           <section>
+            <h2 className="text-xl">Recent Donations</h2>
+            <RecentDonations showCause={true} />
+          </section>
+
+          {/* <section>
             <div className="flex flex-row space-x-12">
               <div className="basis-1/2">
                 <h2 className="text-xl">Our Mission</h2>
@@ -87,7 +93,7 @@ const Home: NextPage = () => {
                 </p>
               </div>
             </div>
-          </section>
+          </section> */}
         </main>
       </div>
     </>
