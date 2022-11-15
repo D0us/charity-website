@@ -1,11 +1,10 @@
 import * as z from "zod";
 import { router, publicProcedure } from "../trpc";
-import { donationSchema } from "../../../schema/donation.schema";
-import { Prisma } from "@prisma/client";
+import { CreateDonationSchema } from "../../../schema/donation.schema";
 
 export const donationRouter = router({
   addDonation: publicProcedure
-    .input(donationSchema)
+    .input(CreateDonationSchema)
     .mutation(({ input, ctx }) => {
       return ctx.prisma.donation.create({
         data: {
@@ -32,7 +31,3 @@ export const donationRouter = router({
       return await ctx.prisma.donation.findMany(args);
     }),
 });
-
-export type DonationsWithCause = Prisma.PromiseReturnType<
-  typeof donationRouter.getRecent
->;

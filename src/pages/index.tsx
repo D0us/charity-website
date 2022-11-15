@@ -28,16 +28,16 @@ const Home: NextPage = () => {
         <main className="container mx-auto flex min-h-full flex-col items-center justify-center p-4">
           <section className="pt-10">
             <div className="flex flex-col items-center justify-center">
-              <h1 className="text-4xl">Lorem Ipsum</h1>
+              <h1 className="text-4xl">Donate Now</h1>
               <p className="pt-4">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Help people directly through decentralised charity
               </p>
             </div>
           </section>
 
           <section>
             <div className="flex flex-row items-center justify-center space-x-4 py-12">
-              <Link onClick={(e) => handleDonationClick(e)} href="/donate">
+              <Link onClick={(e) => handleDonationClick(e)} href="/causes">
                 <button className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700">
                   Donate
                 </button>

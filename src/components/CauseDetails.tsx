@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useMoralis, useWeb3Contract, useNativeBalance } from "react-moralis";
 import { contractAddresses, abi } from "../constants";
+import { ethers, BigNumber } from "ethers";
+import { RecentDonations } from "./RecentDonations";
 
 /*
 TODO:
@@ -8,8 +10,9 @@ TODO:
     -figure out best way to get the recent donations - event tracking or store in local db?
 */
 export const CauseDetails = () => {
-  const [balance, setBalance] = useState<number | null>(null);
-  const [donators, setDonators] = useState<string[] | null>(null);
+  const [donators, setDonators] = useState<string[] | undefined>(undefined);
+  const [donees, setDonees] = useState<string[]>(undefined);
+  const [balance, setBalance] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const update = async () => {
@@ -23,50 +26,75 @@ export const CauseDetails = () => {
   const contractAddress =
     chainId in contractAddresses ? contractAddresses[chainId][0] : null;
 
-  const { runContractFunction: getDonators } = useWeb3Contract({
+  const { runContractFunction: balanceOf } = useWeb3Contract({
     contractAddress: contractAddress,
     abi: abi,
-    functionName: "getDonators",
+    functionName: "balanceOf",
     params: {},
     msgValue: "",
   });
 
-  const { runContractFunction: getDonation } = useWeb3Contract({
+  const { runContractFunction: getDonees } = useWeb3Contract({
     contractAddress: contractAddress,
     abi: abi,
-    functionName: "getDonation",
+    functionName: "getRecipients",
     params: {},
     msgValue: "",
   });
 
   const updateUi = async () => {
-    await getDonators({
-      onError: (error) => {
-        console.log(`getDonators ${error}`);
-      },
+    await balanceOf({
       onSuccess: async (result) => {
-        const donators = result as string[];
-        // console.log(`getDonators result: ${result}`);
-        setDonators(donators);
-        // await getInvididualDonations(donators);
+        // console.log(result);
+        const balance = result as BigNumber;
+        setBalance(balance.toString());
       },
-      onComplete: () => {
-        console.log(`getDonators complete`);
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+    await getDonees({
+      onSuccess: async (result) => {
+        setDonees(result as string[]);
+      },
+      onError: (error) => {
+        console.log(error);
       },
     });
   };
 
   return (
-    <div>
-      <p>Contract Balance: {balance}</p>
-      <h1>Recent Donations</h1>
-      <ul>
-        {donators?.map((donator, i) => {
-          return <li key={i}>{donator}</li>;
-        })}
-      </ul>
-    </div>
+    <>
+      <p>
+        Contract Balance:{" "}
+        {!balance ? <span>...</span> : ethers.utils.formatEther(balance)} ETH
+      </p>
+      <p>Goal: 1000ETH</p>
+      <p>Recipients: {!donees ? <span>...</span> : donees.length}</p>
+      <DoneesList donees={donees} />
+      <h2>Recent Donations:</h2>
+      <RecentDonations />
+    </>
   );
 };
 
 export default CauseDetails;
+
+interface DoneesListProps {
+  donees: string[];
+}
+export const DoneesList = ({ donees }: DoneesListProps) => {
+  if (!donees) {
+    return <span>...</span>;
+  }
+  return (
+    <>
+      <h2>Donees:</h2>
+      <ul>
+        {donees.map((donee) => (
+          <li>{donee}</li>
+        ))}
+      </ul>
+    </>
+  );
+};

@@ -28,7 +28,6 @@ export const RecentDonations = ({
         https://www.prisma.io/docs/concepts/components/prisma-client/advanced-type-safety/operating-against-partial-structures-of-model-types
         */}
         {donations.data.map((donation: any) => {
-          console.log(donation);
           return (
             <li key={donation.id}>
               {showCause && donation.Cause.name}
