@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
  * @dev Donation form with email and billing for receipt
  */
 export const donationFormWithReceiptSchema = z.object({
-  amount: z.string(),
+  amount: z.string().min(1, { message: "Amount is required" }),
   sendReceipt: z.literal(true),
   email: z.string().email({ message: "Must be a valid email" }),
   name: z.string().min(1, { message: "Required" }),
@@ -24,7 +24,7 @@ export const donationFormWithReceiptSchema = z.object({
  * @dev Default donation form with no email receipt, no billing
  */
 export const donationFormWithoutReceiptSchema = z.object({
-  amount: z.string(),
+  amount: z.string().min(1, { message: "Amount is required" }),
   // .min(1 / 10 ** 18, { message: "Amount must be greater than 1 wei" }),
   sendReceipt: z.literal(false),
   displayName: z

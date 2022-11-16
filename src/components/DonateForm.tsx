@@ -81,84 +81,111 @@ export const DonateForm = ({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          type="text"
-          className=""
-          placeholder="Enter Amount"
-          {...register("amount")}
-        />
-        <span className="">ETH</span>
-        {errors.amount && <p>{errors.amount.message}</p>}
-
-        <br />
-        <br />
-
-        {/* Anon */}
-        <input type="checkbox" {...register("anon")} />
-        <label className="pl-2" htmlFor="anonymous">
-          <span>Anonymous Donation</span>
-          <br />
-          {anon ? (
-            <span className="text-sm">
-              Your wallet address will not be displayed
-            </span>
-          ) : (
-            <span className="text-sm">
-              Your wallet address will be displayed
-            </span>
+        {/* Amount */}
+        <div>
+          <label htmlFor="amount">Amount</label>
+          <input
+            type="text"
+            className="input-text"
+            placeholder="Enter Amount"
+            {...register("amount")}
+          />
+          {/* <span className="">ETH</span> */}
+          {errors.amount && (
+            <p className="error-text">{errors.amount.message}</p>
           )}
-        </label>
+        </div>
 
-        <br />
-        <br />
-        <input
-          type="text"
-          placeholder="Display Name (optional)"
-          {...register("displayName")}
-        />
+        {/* Display Name */}
+        <div className="pt-4">
+          <label htmlFor="displayName" className="label">
+            Display Name
+          </label>
+          <input
+            type="text"
+            className="input-text"
+            placeholder="Display Name"
+            {...register("displayName")}
+          />
+        </div>
 
-        <br />
-        <input
-          type="text"
-          placeholder="Message (optional)"
-          {...register("message")}
-        />
+        {/* Message  */}
+        <div className="pt-4">
+          <label htmlFor="message" className="label">
+            Message
+          </label>
+          <input
+            type="text"
+            className="input-text"
+            placeholder="Say something nice!"
+            {...register("message")}
+          />
+        </div>
 
-        <br />
-        <br />
-        <input type="checkbox" {...register("sendReceipt")} />
-        <label className="pl-2" htmlFor="sendReceipt">
-          <span>Get a Receipt</span>
-        </label>
+        {/* Receipt */}
+        <div className="pt-2">
+          <input type="checkbox" {...register("sendReceipt")} />
+          <label className="label  pl-2" htmlFor="sendReceipt">
+            <span>Get a Receipt</span>
+          </label>
+        </div>
 
         {/* Send Email Receipt */}
         {sendReceipt && (
           <div>
-            <span className="text-sm">
+            {/* <p className="label text-sm">
               Name and Email are required to receive a donation receipt.
-            </span>
-            <br />
+            </p> */}
 
-            <input
-              type="text"
-              placeholder="Billing Name"
-              {...register("name", { shouldUnregister: true })}
-            />
-            {errors.name && <p>{errors.name.message}</p>}
-            <br />
-            <input
-              type="text"
-              placeholder="Billing Email"
-              {...register("email", { shouldUnregister: true })}
-            />
-            {errors.email && <p>{errors.email.message}</p>}
+            <div className="">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                className="input-text"
+                placeholder="Billing Name"
+                {...register("name", { shouldUnregister: true })}
+              />
+              {errors.name && (
+                <p className="error-text">{errors.name.message}</p>
+              )}
+            </div>
+
+            <div className="pt-4">
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                className="input-text"
+                placeholder="Billing Email"
+                {...register("email", { shouldUnregister: true })}
+              />
+              {errors.email && (
+                <p className="error-text">{errors.email.message}</p>
+              )}
+            </div>
           </div>
         )}
 
-        <br />
+        {/* Anon */}
+        <div className="pt-4">
+          <input type="checkbox" {...register("anon")} />
+          <label className="label pl-2" htmlFor="anonymous">
+            <span>Anonymous Donation</span>
+            <br />
+            {anon ? (
+              <span className="text-sm">
+                Your wallet address will not be displayed
+              </span>
+            ) : (
+              <span className="text-sm">
+                Your wallet address will be displayed
+              </span>
+            )}
+          </label>
+        </div>
+
         <button
           type="submit"
-          className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+          className="mt-6 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
         >
           Donate
         </button>
