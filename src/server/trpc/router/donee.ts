@@ -19,7 +19,7 @@ export const doneeRouter = router({
           },
         });
         return donee;
-      } catch (e) {
+      } catch (e: any) {
         if (e instanceof PrismaClientKnownRequestError) {
           if (e.code === "P2002") {
             throw new TRPCError({

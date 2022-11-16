@@ -1,20 +1,23 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useMoralis, useWeb3Contract } from "react-moralis";
-import Header from "../components/Header";
 import { contractAddresses, abi } from "../constants";
-import { ethers, ContractTransaction } from "ethers";
+import { ContractTransaction, ContractReceipt } from "ethers";
+import { ethToWei } from "../utils/eth";
 import { trpc } from "../utils/trpc";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
-  CreateDonationValues,
-  CreateDonationSchema,
+  DonationFormValues,
+  donationFormSchema,
 } from "../schema/donation.schema";
 
-interface DonateFormProps {}
+interface DonateFormProps {
+  causeId: string;
+}
 
-export const DonateForm = ({}: DonateFormProps) => {
+export const DonateForm = ({
+  causeId = "clacqgl200000wgfm7auw50p9",
+}: DonateFormProps) => {
   // amount is stored in wei form (1 eth = 10^18 wei)
 
   const [result, setResult] = useState<string>("");
@@ -24,8 +27,8 @@ export const DonateForm = ({}: DonateFormProps) => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateDonationValues>({
-    resolver: zodResolver(CreateDonationSchema),
+  } = useForm<DonationFormValues>({
+    resolver: zodResolver(donationFormSchema),
   });
 
   const amount = watch("amount");
@@ -39,13 +42,6 @@ export const DonateForm = ({}: DonateFormProps) => {
   const contractAddress =
     chainId in contractAddresses ? contractAddresses[chainId][0] : null;
 
-  const ethToWei = (amount: Number | String) => {
-    if (!amount) {
-      return "0";
-    }
-    return ethers.utils.parseEther(amount.toString()).toString();
-  };
-
   const { runContractFunction: makeDonation } = useWeb3Contract({
     contractAddress: contractAddress,
     abi: abi,
@@ -54,32 +50,32 @@ export const DonateForm = ({}: DonateFormProps) => {
     msgValue: ethToWei(amount),
   });
 
-  const onSubmit: SubmitHandler<CreateDonationValues> = async (data) => {
-    console.log(`submit data: ${JSON.stringify(data)}`);
-
+  const onSubmit: SubmitHandler<DonationFormValues> = async (formData) => {
     const donationResult = await makeDonation({
       onError: (error) => {
         setResult(`error: ${JSON.stringify(error)}`);
       },
       onSuccess: async (tx) => {
         setResult(`Donations pending...`);
-        (tx as ContractTransaction).wait(1).then((receipt) => {
-          console.log(receipt);
-          if (receipt?.events![0]?.event === "DonationMade") {
-            mutate({
-              /* Todo:
-              1. get actual address
-              2. get cause dynamically
-              */
-              amount: ethToWei(amount),
-              address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-              causeId: "clacqgl200000wgfm7auw50p9",
-            });
-            setResult(`Donation successful!`);
-          }
-        });
+        const txReceipt = await (tx as ContractTransaction).wait(1);
+        if (txReceipt?.events![0]?.event === "DonationMade") {
+          await recordDonation(txReceipt, formData);
+        }
       },
     });
+  };
+
+  const recordDonation = async (
+    txReceipt: ContractReceipt,
+    formData: DonationFormValues
+  ) => {
+    const extra = {
+      address: txReceipt.from,
+      causeId: causeId,
+    };
+    const args = Object.assign(extra, formData);
+    mutate(args);
+    setResult(`Donation successful!`);
   };
 
   return (

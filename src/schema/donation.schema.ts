@@ -4,10 +4,8 @@ import { BigNumber } from "ethers";
 /**
  * @dev Donation form with email and billing for receipt
  */
-export const createDonationWithReceiptSchema = z.object({
-  amount: z.string().transform(Number),
-  // address: z.string().length(42),
-  // causeId: z.string(),
+export const donationFormWithReceiptSchema = z.object({
+  amount: z.string(),
   sendReceipt: z.literal(true),
   email: z.string().email({ message: "Must be a valid email" }),
   name: z.string().min(1, { message: "Required" }),
@@ -24,13 +22,10 @@ export const createDonationWithReceiptSchema = z.object({
 
 /**
  * @dev Default donation form with no email receipt, no billing
- *     .min(1 / 10 ** 18, { message: "Amount must be greater than 1 wei" }),
-
  */
-export const createDonationWithoutReceiptSchema = z.object({
-  amount: z.string().transform(Number),
-  // address: z.string().length(42),
-  // causeId: z.string(),
+export const donationFormWithoutReceiptSchema = z.object({
+  amount: z.string(),
+  // .min(1 / 10 ** 18, { message: "Amount must be greater than 1 wei" }),
   sendReceipt: z.literal(false),
   displayName: z
     .string()
@@ -43,9 +38,18 @@ export const createDonationWithoutReceiptSchema = z.object({
   anon: z.boolean().default(false),
 });
 
-export const CreateDonationSchema = z.discriminatedUnion("sendReceipt", [
-  createDonationWithReceiptSchema,
-  createDonationWithoutReceiptSchema,
+export const donationFormSchema = z.discriminatedUnion("sendReceipt", [
+  donationFormWithReceiptSchema,
+  donationFormWithoutReceiptSchema,
 ]);
 
-export type CreateDonationValues = z.TypeOf<typeof CreateDonationSchema>;
+export type DonationFormValues = z.TypeOf<typeof donationFormSchema>;
+
+// Ingest
+export const createDonationSchema = z.intersection(
+  donationFormSchema,
+  z.object({
+    causeId: z.string(),
+    address: z.string().length(42),
+  })
+);
