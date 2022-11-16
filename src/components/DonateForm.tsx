@@ -12,7 +12,7 @@ import {
 } from "../schema/donation.schema";
 
 interface DonateFormProps {
-  causeId: string;
+  causeId?: string;
 }
 
 export const DonateForm = ({
@@ -81,7 +81,12 @@ export const DonateForm = ({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type="text" placeholder="Enter Amount" {...register("amount")} />
+        <input
+          type="text"
+          className=""
+          placeholder="Enter Amount"
+          {...register("amount")}
+        />
         <span className="">ETH</span>
         {errors.amount && <p>{errors.amount.message}</p>}
 
