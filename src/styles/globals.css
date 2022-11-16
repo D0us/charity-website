@@ -13,3 +13,7 @@
 .btn-blue:hover {
   @apply bg-blue-700;
 }
+
+.address {
+  @apply text-gray-700;
+}

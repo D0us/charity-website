@@ -86,12 +86,27 @@ model Wallet {
 
 // Todo: store amount as bigint in postgres?
 model Donation {
-  id        String   @id @default(cuid())
-  address   String
-  amount    String
-  createdAt DateTime @default(now())
-  causeId   String
-  Cause     Cause    @relation(fields: [causeId], references: [id])
+  id          String   @id @default(cuid())
+  causeId     String
+  Cause       Cause    @relation(fields: [causeId], references: [id])
+  address     String
+  amount      String
+  displayName String?
+  message     String?
+  anon        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  // When sendReceipt is true, email and name are required
+  Receipt     Receipt?
+}
+
+model Receipt {
+  id         String   @id @default(cuid())
+  email      String
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  donationId String   @unique
+  Donation   Donation @relation(fields: [donationId], references: [id])
 }
 
 model Cause {

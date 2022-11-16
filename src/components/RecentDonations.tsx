@@ -30,8 +30,9 @@ export const RecentDonations = ({
         {donations.data.map((donation: any) => {
           return (
             <li key={donation.id}>
-              {showCause && donation.Cause.name}
-              {donation.createdAt.toDateString()} - {donation.address} -{" "}
+              {showCause && donation.Cause.name && " "}
+              {donation.createdAt.toDateString()} -{" "}
+              <span className="address">{donation.address}</span> -{" "}
               {ethers.utils.formatEther(donation.amount)} ETH
             </li>
           );
