@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { ethers } from "ethers";
 import { Donation, Cause } from "@prisma/client";
@@ -16,7 +16,34 @@ export const RecentDonations = ({
   causeId,
   showCause = false,
 }: RecentDonationsProps) => {
-  const donations = trpc.donation.getRecent.useQuery({ causeId: causeId });
+  const [page, setPage] = useState(1);
+
+  const donations = trpc.donation.getRecent.useQuery({
+    causeId: causeId,
+    page: page,
+  });
+
+  useEffect(() => {
+    donations.refetch();
+  }, [page]);
+
+  const paginate = (direction: "next" | "prev") => {
+    if (direction === "next") {
+      setPage((page) => {
+        if (donations.data && donations.data.length < 5) {
+          return page;
+        }
+        return page + 1;
+      });
+    } else {
+      setPage((page) => {
+        if (page > 1) {
+          return page - 1;
+        }
+        return page;
+      });
+    }
+  };
 
   const anonymizeAddress = (address: string): string => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -51,6 +78,14 @@ export const RecentDonations = ({
           );
         })}
       </ul>
+      <div className="flex flex-row justify-between">
+        <button className="btn" onClick={() => paginate("prev")}>
+          Prev
+        </button>
+        <button className="btn" onClick={() => paginate("next")}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };

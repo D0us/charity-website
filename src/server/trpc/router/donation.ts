@@ -1,7 +1,10 @@
 import * as z from "zod";
 import { router, publicProcedure } from "../trpc";
 import { createDonationSchema } from "../../../schema/donation.schema";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+} from "@prisma/client/runtime";
 import { TRPCError } from "@trpc/server";
 
 export const donationRouter = router({
@@ -48,18 +51,34 @@ export const donationRouter = router({
     }),
 
   getRecent: publicProcedure
-    .input(z.object({ causeId: z.string().nullish() }))
+    .input(z.object({ causeId: z.string().nullish(), page: z.number().min(1) }))
     .query(async ({ input, ctx }) => {
       let args = {};
+      const nResultsPerPage = 5;
       if (input.causeId) {
         args = {
           where: { causeId: input.causeId },
           include: { Cause: true },
           orderBy: { createdAt: "desc" },
+          take: nResultsPerPage,
+          skip: (input.page - 1) * nResultsPerPage,
         };
       } else {
-        args = { orderBy: { createdAt: "desc" }, include: { Cause: true } };
+        args = {
+          orderBy: { createdAt: "desc" },
+          include: { Cause: true },
+          take: nResultsPerPage,
+          skip: (input.page - 1) * nResultsPerPage,
+        };
       }
-      return await ctx.prisma.donation.findMany(args);
+      try {
+        return await ctx.prisma.donation.findMany(args);
+      } catch (e: any) {
+        console.log(e);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong",
+        });
+      }
     }),
 });
