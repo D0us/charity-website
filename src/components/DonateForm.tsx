@@ -97,7 +97,7 @@ export const DonateForm = ({
         </div>
 
         {/* Display Name */}
-        <div className="pt-4">
+        <div className="pt-3">
           <label htmlFor="displayName" className="label">
             Display Name
           </label>
@@ -110,7 +110,7 @@ export const DonateForm = ({
         </div>
 
         {/* Message  */}
-        <div className="pt-4">
+        <div className="pt-3">
           <label htmlFor="message" className="label">
             Message
           </label>
@@ -150,7 +150,7 @@ export const DonateForm = ({
               )}
             </div>
 
-            <div className="pt-4">
+            <div className="pt-3">
               <label htmlFor="email">Email</label>
               <input
                 type="text"
@@ -166,7 +166,7 @@ export const DonateForm = ({
         )}
 
         {/* Anon */}
-        <div className="pt-4">
+        <div className="pt-2">
           <input type="checkbox" {...register("anon")} />
           <label className="label pl-2" htmlFor="anonymous">
             <span>Anonymous Donation</span>
@@ -183,10 +183,7 @@ export const DonateForm = ({
           </label>
         </div>
 
-        <button
-          type="submit"
-          className="mt-6 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-        >
+        <button type="submit" className="btn btn-primary mt-6">
           Donate
         </button>
       </form>

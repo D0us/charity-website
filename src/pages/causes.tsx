@@ -10,9 +10,7 @@ export const Causes = () => {
         <title>Charity</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div className="px-24">
-        <Header />
-      </div>
+      <Header />
       <main>
         <CauseList />
       </main>

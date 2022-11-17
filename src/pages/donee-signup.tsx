@@ -36,12 +36,13 @@ export const Signup = () => {
         <title>Charity</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div className="px-24">
-        <Header />
 
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl">Sign up to be a donee </h1>
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xs">
+      <Header />
+
+      <div className="flex flex-col items-center justify-center space-y-2 pt-10">
+        <h1 className="text-3xl">Sign up to be a donee </h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xs">
+          <div className="flex flex-col space-y-2">
             <input
               type="hidden"
               {...register("causeId")}
@@ -54,7 +55,6 @@ export const Signup = () => {
               placeholder="Last Name"
             />
             {errors.name?.message && errors.name?.message}
-            <br />
             <input
               {...register("walletAddress")}
               type="text"
@@ -62,12 +62,11 @@ export const Signup = () => {
               placeholder="Wallet address"
             />
             {errors.walletAddress?.message && errors.walletAddress?.message}
-            <br />
-            <button type="submit" className="btn btn-blue">
+            <button type="submit" className="btn btn-primary">
               Sign Up
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </>
   );

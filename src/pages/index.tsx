@@ -23,37 +23,34 @@ const Home: NextPage = () => {
         <title>Charity</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <div className="px-24">
+      <div className="">
         <Header />
-        <main className="container mx-auto flex min-h-full flex-col items-center justify-center p-4">
-          <section className="pt-10">
-            <div className="flex flex-col items-center justify-center">
-              <h1 className="text-4xl">Donate Now</h1>
-              <p className="pt-4">
-                Help people directly through decentralised charity
-              </p>
-            </div>
-          </section>
+        <main className="">
+          {/* Hero */}
+          <section className="flex flex-col items-center justify-center bg-light py-32">
+            <h1 className="text-6xl">Donate Now</h1>
+            <p className="pt-2 text-xl">
+              Help people directly through decentralised charity
+            </p>
 
-          <section>
-            <div className="flex flex-row items-center justify-center space-x-4 py-12">
+            <div className="flex flex-row space-x-6 pt-6">
               <Link onClick={(e) => handleDonationClick(e)} href="/causes">
-                <button className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700">
-                  Donate
-                </button>
+                <button className="btn btn-primary">Donate</button>
               </Link>
 
               <Link href="/donee-signup">
-                <button className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700">
-                  Receive
-                </button>
+                <button className="btn btn-primary">Receive</button>
               </Link>
             </div>
           </section>
 
-          <section>
-            <h2 className="text-xl">Recent Donations</h2>
-            <RecentDonations showCause={true} />
+          <section className="flex flex-row items-center justify-center bg-egg py-8 text-black">
+            <div className="flex flex-col space-y-4">
+              <h2 className="items-left text-2xl font-bold">
+                Recent Donations
+              </h2>
+              <RecentDonations showCause={true} />
+            </div>
           </section>
 
           {/* <section>

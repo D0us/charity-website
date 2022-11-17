@@ -14,11 +14,16 @@ const CauseCard = ({ id }: CauseCardProps) => {
   }
 
   return (
-    <div className=" flex flex-col items-center justify-center space-y-4 outline-double outline-indigo-700">
-      <h1>{cause.data.name}</h1>
+    <div className="m-10 flex flex-col items-center justify-center space-y-4 rounded-md border p-10">
+      <h2 className="py-4 text-2xl">{cause.data.name}</h2>
       {/* <h1>{cause.data.}</h1> */}
-      <DonateForm />
       <CauseDetails />
+      <div className="flex flex-col space-x-12 md:flex-row">
+        <div className="md:w-2/3">
+          <DonateForm />
+        </div>
+        <RecentDonations />
+      </div>
     </div>
   );
 };

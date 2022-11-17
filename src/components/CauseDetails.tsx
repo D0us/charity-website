@@ -64,17 +64,17 @@ export const CauseDetails = () => {
   };
 
   return (
-    <>
-      <p>
+    <ul>
+      <li>
         Contract Balance:{" "}
         {!balance ? <span>...</span> : ethers.utils.formatEther(balance)} ETH
-      </p>
-      <p>Goal: 1000ETH</p>
-      <p>Recipients: {!donees ? <span>...</span> : donees.length}</p>
-      <DoneesList donees={donees} />
-      <h2>Recent Donations:</h2>
-      <RecentDonations />
-    </>
+      </li>
+      <li>Goal: 1000ETH</li>
+      <li>Recipients: {!donees ? <span>...</span> : donees.length}</li>
+      <li>
+        <DoneesList donees={donees} />
+      </li>
+    </ul>
   );
 };
 
