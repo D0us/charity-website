@@ -1,12 +1,8 @@
 import React from "react";
-import DonateForm from "../components/DonateForm";
+import CauseCard from "../components/Cause/CauseCard";
 
 export const Test = () => {
-  return (
-    <div className="">
-      <DonateForm />
-    </div>
-  );
+  return <div className=""></div>;
 };
 
 export default Test;

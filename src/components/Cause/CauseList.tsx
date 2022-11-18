@@ -17,9 +17,9 @@ export const CauseList = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div>
+    <div className="py-20 px-10 md:px-20">
       {causes.data.map((cause) => {
-        return <CauseCard key={cause.id} id={cause.id} />;
+        return <CauseCard key={cause.id} cause={cause} />;
       })}
     </div>
   );

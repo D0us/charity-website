@@ -14,4 +14,15 @@ export const causeRouter = router({
       });
       return cause;
     }),
+  getBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const cause = await ctx.prisma.cause.findUnique({
+        where: { slug: input.slug },
+      });
+      if (!cause) {
+        throw new Error("Cause not found");
+      }
+      return cause;
+    }),
 });
