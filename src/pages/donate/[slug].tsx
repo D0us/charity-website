@@ -56,7 +56,7 @@ export const DonatePage = ({ cause }: DonatePageProps) => {
       <CauseDetails />
       <div className="flex flex-col space-x-12 md:flex-row">
         <div className="md:w-2/3">
-          <DonateForm />
+          <DonateForm causeId={cause.id} />
         </div>
         <RecentDonations />
       </div>

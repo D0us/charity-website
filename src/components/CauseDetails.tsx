@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useMoralis, useWeb3Contract, useNativeBalance } from "react-moralis";
 import { contractAddresses, abi } from "../constants";
 import { ethers, BigNumber } from "ethers";
-import { RecentDonations } from "./RecentDonations";
 
 /*
 TODO:

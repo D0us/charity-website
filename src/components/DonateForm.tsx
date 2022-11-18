@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import { contractAddresses, abi } from "../constants";
 import { ContractTransaction, ContractReceipt } from "ethers";
@@ -6,20 +6,20 @@ import { ethToWei } from "../utils/eth";
 import { trpc } from "../utils/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { notify } from "../utils/notifications";
+
 import {
   DonationFormValues,
   donationFormSchema,
 } from "../schema/donation.schema";
+import { toNamespacedPath } from "node:path/win32";
 
 interface DonateFormProps {
-  causeId?: string;
+  causeId: string;
 }
 
-export const DonateForm = ({
-  causeId = "clacqgl200000wgfm7auw50p9",
-}: DonateFormProps) => {
+export const DonateForm = ({ causeId }: DonateFormProps) => {
   // amount is stored in wei form (1 eth = 10^18 wei)
-
   const [result, setResult] = useState<string>("");
 
   const {
@@ -54,11 +54,17 @@ export const DonateForm = ({
     const donationResult = await makeDonation({
       onError: (error) => {
         setResult(`error: ${JSON.stringify(error)}`);
+        notify({ message: `Error:  + ${error.message}`, type: "error" });
       },
       onSuccess: async (tx) => {
-        setResult(`Donations pending...`);
+        notify({
+          message: `Donations pending...`,
+          type: "info",
+          hideProgressBar: false,
+        });
         const txReceipt = await (tx as ContractTransaction).wait(1);
         if (txReceipt?.events![0]?.event === "DonationMade") {
+          notify({ message: `Donation successful!`, type: "success" });
           await recordDonation(txReceipt, formData);
         }
       },
@@ -75,7 +81,6 @@ export const DonateForm = ({
     };
     const args = Object.assign(extra, formData);
     mutate(args);
-    setResult(`Donation successful!`);
   };
 
   return (
